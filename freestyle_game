@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freestyle Grid</title>
+    <style>
+        body {
+            background-color: #000005;
+            font-family: Arial, sans-serif;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            margin: 0;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 150px repeat(3, 150px);
+            grid-template-rows: 100px repeat(3, 150px);
+            gap: 2px;
+            background-color: #0f0f2d;
+            border: 2px solid #00c0ff;
+            border-radius: 8px;
+        }
+
+        .header-cell,
+        .side-cell,
+        .input-cell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #00c0ff;
+            background-color: #1b1b3c;
+            text-align: center;
+            position: relative;
+        }
+
+        .header-cell img,
+        .side-cell img,
+        .freestyler-img {
+            max-width: 80%;
+            max-height: 80%;
+            object-fit: contain;
+        }
+
+        .input-cell span {
+            font-size: 18px;
+            color: #00c0ff;
+            position: absolute;
+        }
+
+        .input-area {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .input-area input {
+            padding: 8px;
+            border-radius: 4px;
+            border: none;
+            width: 200px;
+        }
+
+        .input-area button {
+            padding: 8px 15px;
+            background-color: #00c0ff;
+            border: none;
+            color: #000;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .settings {
+            margin-bottom: 10px;
+        }
+
+        .settings select {
+            padding: 5px;
+            border-radius: 4px;
+            border: none;
+        }
+
+        #timer {
+            margin-top: 10px;
+            font-size: 18px;
+            color: #ff4444;
+            display: none;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #00c0ff;
+        }
+    </style>
+</head>
+
+<body>
+    <h1> Campeones Freestyle</h1>
+
+    <div class="settings">
+        <label for="difficulty">Dificultad:</label>
+        <select id="difficulty">
+            <option value="none">Selecciona</option>
+            <option value="easy">Fácil</option>
+            <option value="medium">Medio</option>
+            <option value="hard">Difícil</option>
+        </select>
+        <button onclick="startGame()">Iniciar Juego</button>
+    </div>
+
+    <div class="grid-container">
+        <!-- Fila superior con banderas -->
+        <div></div>
+        <div class="header-cell"><img src="imagenes/BEs.png" alt="País 1"></div>
+        <div class="header-cell"><img src="imagenes/BMEX.png" alt="País 2"></div>
+        <div class="header-cell"><img src="imagenes/Bchile.png" alt="País 3"></div>
+
+        <!-- Fila 1 -->
+        <div class="side-cell"><img src="imagenes/redbull.png" alt="Competencia 1"></div>
+        <div class="input-cell" data-key="0-0">
+            <span>2019</span>
+        </div>
+        <div class="input-cell" data-key="0-1">
+            <span>2020</span>
+        </div>
+        <div class="input-cell" data-key="0-2">
+            <span>2021</span>
+        </div>
+
+        <!-- Fila 2 -->
+        <div class="side-cell"><img src="imagenes/godlevel.jpg" alt="Competencia 2"></div>
+        <div class="input-cell" data-key="1-0">
+            <span>2018</span>
+        </div>
+        <div class="input-cell" data-key="1-1">
+            <span>2022</span>
+        </div>
+        <div class="input-cell" data-key="1-2">
+            <span>2017</span>
+        </div>
+
+        <!-- Fila 3 -->
+        <div class="side-cell"><img src="imagenes/quintoescalon.jpg" alt="Competencia 3"></div>
+        <div class="input-cell" data-key="2-0">
+            <span>2020</span>
+        </div>
+        <div class="input-cell" data-key="2-1">
+            <span>2021</span>
+        </div>
+        <div class="input-cell" data-key="2-2">
+            <span>2023</span>
+        </div>
+    </div>
+
+    <div class="input-area" style="display: none;" id="inputArea">
+        <input type="text" id="freestylerInput" placeholder="Escribe el nombre del freestyler">
+        <button id="submitBtn">Aceptar</button>
+    </div>
+
+    <div id="timer"></div>
+
+    <script>
+        const correctAnswers = {
+            "chuty": { key: "0-0", img: "imagenes/Chuty.png" },
+            "aczino": { key: "0-1", img: "imagenes/aczino.png" },
+            "skone": { key: "0-2", img: "skone.png" },
+            "dtoke": { key: "1-0", img: "dtoke.png" },
+            "gazir": { key: "1-1", img: "gazir.png" },
+            "kaiser": { key: "1-2", img: "kaiser.png" },
+            "bnet": { key: "2-0", img: "bnet.png" },
+            "mecha": { key: "2-1", img: "mecha.png" },
+            "teorema": { key: "2-2", img: "teorema.png" }
+        };
+
+        let countdown;
+        let timeLeft = 0;
+
+        function startGame() {
+            const difficulty = document.getElementById('difficulty').value;
+            if (difficulty === "none") {
+                alert("Selecciona una dificultad");
+                return;
+            }
+
+            document.getElementById('inputArea').style.display = 'flex';
+            document.getElementById('timer').style.display = 'block';
+
+            switch (difficulty) {
+                case "easy": timeLeft = 300; break; // 5 min
+                case "medium": timeLeft = 180; break; // 3 min
+                case "hard": timeLeft = 60; break; // 1 min
+            }
+
+            clearInterval(countdown);
+            updateTimer();
+            countdown = setInterval(() => {
+                timeLeft--;
+                updateTimer();
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    alert("¡Tiempo terminado!");
+                }
+            }, 1000);
+        }
+
+        function updateTimer() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timer').textContent = `Tiempo restante: ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+        }
+
+        document.getElementById('submitBtn').addEventListener('click', () => {
+            const input = document.getElementById('freestylerInput');
+            const name = input.value.trim();
+
+            if (!name) {
+                alert("Por favor, ingresa un nombre.");
+                return;
+            }
+
+            const answer = correctAnswers[name];
+
+            if (answer) {
+                const cell = document.querySelector(`.input-cell[data-key="${answer.key}"]`);
+                if (cell && !cell.querySelector('img')) {
+                    const img = document.createElement('img');
+                    img.src = answer.img;
+                    img.alt = name;
+                    img.classList.add('freestyler-img');
+                    cell.innerHTML = '';
+                    cell.appendChild(img);
+                }
+                input.value = '';
+            } else {
+                alert("Nombre incorrecto, intenta de nuevo.");
+            }
+        });
+    </script>
+</body>
+
+</html>
