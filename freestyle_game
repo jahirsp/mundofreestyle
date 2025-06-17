@@ -31,7 +31,9 @@
     <h1>Campeones Freestyle</h1>
 
     <div class="grid-container">
-        <div></div>
+        <div class="header-cell" id="timerCell">
+            <div class="timer-text" id="timer"></div>
+        </div>
         <div class="header-cell"><img src="imagenes/BEs.png" alt="País 1"></div>
         <div class="header-cell"><img src="imagenes/BMEX.png" alt="País 2"></div>
         <div class="header-cell"><img src="imagenes/Bandera_Argentina.png" alt="País 3"></div>
@@ -49,7 +51,7 @@
         <div class="side-cell"><img src="imagenes/logo_fms_internacional.png" alt="Competencia 3"></div>
         <div class="input-cell" data-key="2020"><span>2020</span></div>
         <div class="input-cell" data-key="2019"><span>2019</span></div>
-        <div class="input-cell" data-key="L2023"><span>L2023</span></div>
+        <div class="input-cell" data-key="L2023"><span>2023</span></div>
     </div>
 
     <div class="input-area" id="inputArea">
